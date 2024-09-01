@@ -75,13 +75,13 @@ export default async function AdminDashboard() {
     )
 }
 
-type DashobardCardProps = {
+type DashboardCardProps = {
     title: string
     subtitle: string
     body: string
 }
 
-function DashboardCard({title, subtitle, body}: DashobardCardProps){
+function DashboardCard({title, subtitle, body}: DashboardCardProps){
     return (
         <Card>
             <CardHeader>
