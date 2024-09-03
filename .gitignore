@@ -1,0 +1,43 @@
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+mulberryleavesme/node_modules
+mulberryleavesme/.pnp
+mulberryleavesme/.pnp.js
+mulberryleavesme/.yarn/install-state.gz
+
+# testing
+mulberryleavesme/coverage
+
+# next.js
+mulberryleavesme/.next/
+mulberryleavesme/out/
+
+# production
+mulberryleavesme/build
+
+# misc
+mulberryleavesme/mulberryleavesme.DS_Store
+mulberryleavesme/mulberryleavesme*.pem
+
+# debug
+mulberryleavesme/npm-debug.log*
+mulberryleavesme/yarn-debug.log*
+mulberryleavesme/yarn-error.log*
+
+# local env files
+mulberryleavesme/.env*.local
+mulberryleavesme/.env
+
+# vercel
+mulberryleavesme/.vercel
+
+# typescript
+mulberryleavesme/*.tsbuildinfo
+mulberryleavesme/next-env.d.
+mulberryleavesme/products
+mulberryleavesme/public/products
+mulberryleavesme/.env
+mulberryleavesme/.env
+mulberryleavesme/.env
