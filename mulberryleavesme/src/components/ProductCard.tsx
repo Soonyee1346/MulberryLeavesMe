@@ -25,10 +25,15 @@ export function ProductCard({name, priceInCents, description, id, imagePath}: Pr
             <CardContent className="flex-grow">
                 <p className="line-clamp-4">{description}</p>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="space-x-4">
                 <Button asChild size="lg" className="w-full">
-                    <Link href={`/products/${id}/purchase`}>
-                        Purchase
+                    <Link href={`/products/${id}/productPage`}>
+                        View Product
+                    </Link>
+                </Button>
+                <Button asChild size="lg" className="w-full">
+                    <Link href='/'>
+                        Add To Cart
                     </Link>
                 </Button>
             </CardFooter>
