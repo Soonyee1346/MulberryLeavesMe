@@ -1,8 +1,12 @@
+"use client"
+
 import { formatCurrency } from "@/lib/formatters";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { useShoppingCart } from "@/app/(customerFacing)/context/ShoppingCartContext";
+import { Product } from "@/app/(customerFacing)/Types/ShoppingCart.interface";
 
 type ProductCardProps = {
     id: string
@@ -13,6 +17,18 @@ type ProductCardProps = {
 }
 
 export function ProductCard({name, priceInCents, description, id, imagePath}: ProductCardProps) {
+    const { addItemToCart } = useShoppingCart();
+
+    const product: Product = {
+        id: id,
+        name: name,
+        quantity: 1,
+        priceInCents: priceInCents,
+        imagePath: imagePath
+    }
+
+    const handleClick = () => addItemToCart(product)
+    
     return (
         <Card className="flex overflow-hidden flex-col">
             <div className="relative w-full h-auto aspect-video">
@@ -31,10 +47,8 @@ export function ProductCard({name, priceInCents, description, id, imagePath}: Pr
                         View Product
                     </Link>
                 </Button>
-                <Button asChild size="lg" className="w-full">
-                    <Link href='/'>
-                        Add To Cart
-                    </Link>
+                <Button size="lg" className="w-full" onClick={handleClick}>
+                    Add To Cart
                 </Button>
             </CardFooter>
         </Card>

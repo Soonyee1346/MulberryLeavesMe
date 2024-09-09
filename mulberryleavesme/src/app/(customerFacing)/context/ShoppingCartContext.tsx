@@ -3,7 +3,7 @@ import { ShoppingCartContextType, ShoppingCartProviderProps, Product } from "../
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
-export function ShoppingCartProvider({ children}: ShoppingCartProviderProps){
+export function ShoppingCartProvider({ children }: ShoppingCartProviderProps){
     const [cart, setCart] = useState<Product[]>([]);
 
     //Load cart items from LocalStorage when the context is initialized
@@ -12,7 +12,7 @@ export function ShoppingCartProvider({ children}: ShoppingCartProviderProps){
         if (storedCart) {
             setCart(JSON.parse(storedCart))
         }
-    })
+    }, [])
 
     const updateCartAndLocalStorage = (newCart: Product[]) => {
         setCart(newCart);
@@ -24,14 +24,14 @@ export function ShoppingCartProvider({ children}: ShoppingCartProviderProps){
         updateCartAndLocalStorage(updatedCart)
     }
 
-    const removeItemFromCart = (productId: number) => {
-        const updatedCart = cart.filter((product) => product.id !== productId);
+    const removeItemFromCart = (productId: string) => {
+        const updatedCart = cart.filter((product) => product.id != productId);
         updateCartAndLocalStorage(updatedCart)
     }
 
-    const updateCartItemQuantity = (productId: number, newQuantity: number) => {
+    const updateCartItemQuantity = (productId: string, newQuantity: number) => {
         const updatedCart = cart.map((product) => {
-            if(product.id === productId){
+            if(product.id == productId){
                 return {...product, quantity: newQuantity}
             }
             return product;

@@ -3,13 +3,6 @@ import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { Suspense } from "react";
 
-const getProducts = cache(() => {
-    return db.product.findMany({ 
-        where: 
-            { isAvailableForPurchase: true}, 
-        orderBy:  
-            { name: "asc"}})
-}, ["/products", "getProducts"])
 
 export default function ProductsPage() {
     return (
@@ -31,6 +24,15 @@ export default function ProductsPage() {
 }
 
 async function ProductsSuspense() {
+
+    const getProducts = cache(() => {
+        return db.product.findMany({ 
+            where: 
+                { isAvailableForPurchase: true}, 
+            orderBy:  
+                { name: "asc"}})
+    }, ["/products", "getProducts"])
+
     const products = await getProducts()
     return products.map(product => (
         <ProductCard key={product.id} {...product} />
