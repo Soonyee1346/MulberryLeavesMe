@@ -14,14 +14,23 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps){
         }
     }, [])
 
+    const checkCart = (product: Product) =>{
+    }
+
     const updateCartAndLocalStorage = (newCart: Product[]) => {
         setCart(newCart);
         localStorage.setItem("cart", JSON.stringify(newCart))
     }
 
     const addItemToCart = (product: Product) => {
-        const updatedCart = [...cart, product]
-        updateCartAndLocalStorage(updatedCart)
+        if(cart.some(item => item.id === product.id)){
+            const updatedCart = cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1} : item)
+            updateCartAndLocalStorage(updatedCart)
+        }
+        else {
+            const updatedCart = [...cart, product]
+            updateCartAndLocalStorage(updatedCart)
+        }
     }
 
     const removeItemFromCart = (productId: string) => {
@@ -39,11 +48,18 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps){
         updateCartAndLocalStorage(updatedCart)
     }
 
+    const clearCart = () => {
+        cart.map((product) => 
+            removeItemFromCart(product.id)
+        )
+    }
+
     const contextValue: ShoppingCartContextType = {
         cart,
         addItemToCart,
         removeItemFromCart,
-        updateCartItemQuantity
+        updateCartItemQuantity,
+        clearCart
     }
 
     return (

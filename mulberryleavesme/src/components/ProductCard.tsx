@@ -27,7 +27,9 @@ export function ProductCard({name, priceInCents, description, id, imagePath}: Pr
         imagePath: imagePath
     }
 
-    const handleClick = () => addItemToCart(product)
+    const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+        addItemToCart(product)
+    }
     
     return (
         <Card className="flex overflow-hidden flex-col">

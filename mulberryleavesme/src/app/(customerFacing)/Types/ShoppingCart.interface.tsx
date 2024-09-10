@@ -10,9 +10,10 @@ export interface Product {
 
 export interface ShoppingCartContextType{
     cart: Product[]
-    addItemToCart: (product: Product) => void;
+    addItemToCart: (product: Product) => void
     removeItemFromCart: (productId: string) => void
     updateCartItemQuantity: (productId: string, newQuantity: number) => void
+    clearCart: () => void
 }
 
 export interface ShoppingCartProviderProps {

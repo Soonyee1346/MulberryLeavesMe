@@ -7,8 +7,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSepar
 import { Button } from "@/components/ui/button"
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import Link from "next/link"
+import { formatCurrency } from "@/lib/formatters";
+import Image from "next/image";
 
 export function ShoppingCart() {
+
+    const { cart, updateCartItemQuantity, removeItemFromCart, addItemToCart, clearCart} = useShoppingCart();
+
+
+    /*const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+        clearCart()
+        <DropdownMenuItem>
+        <Button onClick={handleClick}>
+            Clear Cart
+        </Button>
+    </DropdownMenuItem>
+    }*/
 
     return (
         <div className="my-2 mx-1">
@@ -22,7 +36,7 @@ export function ShoppingCart() {
             <DropdownMenuLabel>My Cart</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <CartContent/>
-            <DropdownMenuItem className="">
+            <DropdownMenuItem className="my-2">
               <Button>
                 <Link href="/cart">View Cart</Link>
               </Button>
@@ -69,10 +83,33 @@ export function ShoppingCart() {
     return (
         <>
             {cart.map((product) => (
-                <DropdownMenuItem>
-                    {product.id}
+                <DropdownMenuItem className="my-8">
+                    <div className="flex">
+                        <div className="w-2/3 flex justify-center mx-2">
+                            <Link href={`/products/${product.id}/productPage`}>
+                                <Image src={`/${product.imagePath}`} 
+                                    width={0} 
+                                    height={0} 
+                                    sizes="100vw" 
+                                    style={{ 
+                                        width: '95%', 
+                                        height: 'auto' 
+                                    }} 
+                                    alt={product.name}
+                                />
+                            </Link>
+                        </div>
+                        <div>
+                            <b>{product.name}</b><br />
+                            {formatCurrency(product.priceInCents / 100)}<br/>
+                            <b>Quantity:</b> {product.quantity}
+                        </div>
+                    </div>
                 </DropdownMenuItem>
             ))}
+            <DropdownMenuItem>
+                <b>Total:</b> <u>{formatCurrency(cart.reduce((total, product) => total + (product.priceInCents * product.quantity), 0)/100)}</u>
+            </DropdownMenuItem>
         </>
     )
   
