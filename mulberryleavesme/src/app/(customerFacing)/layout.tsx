@@ -21,6 +21,6 @@ export default function Layout({
         <ShoppingCart />
     </Nav>
     <div className="container my-6">{children}</div>
-    </ShoppingCartProvider>
+  </ShoppingCartProvider>
   </>
 }
