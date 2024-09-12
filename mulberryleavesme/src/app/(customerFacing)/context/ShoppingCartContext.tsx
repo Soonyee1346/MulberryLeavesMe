@@ -24,7 +24,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps){
 
     const addItemToCart = (product: Product) => {
         if(cart.some(item => item.id === product.id)){
-            const updatedCart = cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1} : item)
+            const updatedCart = cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + product.quantity} : item)
             updateCartAndLocalStorage(updatedCart)
         }
         else {

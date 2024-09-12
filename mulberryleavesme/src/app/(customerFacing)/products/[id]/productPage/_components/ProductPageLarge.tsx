@@ -3,9 +3,10 @@
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Product } from "@prisma/client";
 import { useShoppingCart } from "@/app/(customerFacing)/context/ShoppingCartContext";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 type productProps = {
     product: Product
@@ -53,16 +54,21 @@ export function ProductPageLarge({ product } : productProps) {
 function AddToCart({ product } : productProps) {
 
     const { addItemToCart } = useShoppingCart();
+    const [ quantity, setQuantity ] = useState(1)
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
         const item : itemToAdd = { 
             id: product.id,
             name: product.name,
-            quantity: 1,
+            quantity: quantity,
             priceInCents: product.priceInCents,
             imagePath: product.imagePath
         }
         addItemToCart(item)
+    }
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> ) => {
+        setQuantity(Number(e.target.value))
     }
 
     return (
@@ -70,11 +76,17 @@ function AddToCart({ product } : productProps) {
             <form className="space-y-4">
                 <div>
                     <label>Quantity:</label><br/>
-                    <input type="number" id="quantity" className="w-2/3 border-4 rounded-md" name="quantity" min="1" max="5" placeholder="Quantity"></input>
-                    <p className="line-clamp-3 text-muted-foreground">*Max Amount: 5</p>
+                    <Input 
+                        type="number" 
+                        id="quantity" 
+                        className="w-2/3 border-4 rounded-md" 
+                        name="quantity" min="1" 
+                        placeholder="1"
+                        onInput={handleInputChange} 
+                    />
                 </div>
                 <div className="space-y-2">
-                    <Button type="submit" className=" w-full mx-auto">Add To Cart</Button>
+                    <Button onClick={handleClick} className=" w-full mx-auto">Add To Cart</Button>
                 </div>
             </form>
         </div>

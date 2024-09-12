@@ -10,10 +10,7 @@ import Link from "next/link"
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
 
-export function ShoppingCart() {
-
-    const { cart, updateCartItemQuantity, removeItemFromCart, addItemToCart, clearCart} = useShoppingCart();
-
+export function DropdownShoppingCart() {
 
     /*const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
         clearCart()
@@ -35,7 +32,7 @@ export function ShoppingCart() {
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>My Cart</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <CartContent/>
+            <DropdownCartContent/>
             <DropdownMenuItem className="my-2">
               <Button>
                 <Link href="/cart">View Cart</Link>
@@ -47,9 +44,9 @@ export function ShoppingCart() {
     )
 }
   
- function CartContent() {
+ function DropdownCartContent() {
 
-    const { cart, updateCartItemQuantity, removeItemFromCart, addItemToCart} = useShoppingCart();
+    const { cart, addItemToCart} = useShoppingCart();
 
     const [newProduct, setNewProduct] = useState<Product>({
         id: Math.floor(Math.random() * 1000).toString(),
@@ -58,25 +55,6 @@ export function ShoppingCart() {
         priceInCents: 0,
         imagePath: ""
     })
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setNewProduct((prevProduct: any) => ({
-            ...prevProduct,
-            [name]: name === "quantity" ? parseInt(value) : value
-        }))
-    }
-
-    const handleAddItem = () => {
-        addItemToCart(newProduct)
-        setNewProduct({
-            id: Math.floor(Math.random() * 1000).toString(),
-            name: "",
-            quantity: 0,
-            priceInCents: 0,
-            imagePath: ""
-        })
-    }
   
     if(cart.length == 0){return <DropdownMenuItem> Cart is empty</DropdownMenuItem>}
   
