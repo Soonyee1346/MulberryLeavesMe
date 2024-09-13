@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { Product } from "../Types/ShoppingCart.interface"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -35,7 +33,7 @@ export function DropdownShoppingCart() {
             <DropdownCartContent/>
             <DropdownMenuItem className="my-2">
               <Button>
-                <Link href="/cart">View Cart</Link>
+                <Link href="../../cart">View Cart</Link>
               </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -46,15 +44,7 @@ export function DropdownShoppingCart() {
   
  function DropdownCartContent() {
 
-    const { cart, addItemToCart} = useShoppingCart();
-
-    const [newProduct, setNewProduct] = useState<Product>({
-        id: Math.floor(Math.random() * 1000).toString(),
-        name: "",
-        quantity: 0,
-        priceInCents: 0,
-        imagePath: ""
-    })
+    const { cart } = useShoppingCart();
   
     if(cart.length == 0){return <DropdownMenuItem> Cart is empty</DropdownMenuItem>}
   

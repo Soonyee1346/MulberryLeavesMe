@@ -14,9 +14,6 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps){
         }
     }, [])
 
-    const checkCart = (product: Product) =>{
-    }
-
     const updateCartAndLocalStorage = (newCart: Product[]) => {
         setCart(newCart);
         localStorage.setItem("cart", JSON.stringify(newCart))
