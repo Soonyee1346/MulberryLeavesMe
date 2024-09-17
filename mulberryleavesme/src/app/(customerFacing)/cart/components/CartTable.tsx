@@ -1,5 +1,7 @@
+"use client"
+
 import { formatCurrency } from "@/lib/formatters";
-import { useShoppingCart } from "../context/ShoppingCartContext";
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 import {
     Table,
     TableBody,
@@ -10,8 +12,10 @@ import {
   } from "@/components/ui/table"
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Product } from "../Types/ShoppingCart.interface";
+import { Product } from "../../Types/ShoppingCart.interface";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function CartTable() {
 
@@ -62,7 +66,7 @@ export function CartTable() {
                     <Input 
                         type="number" 
                         id="quantity" 
-                        className="w-2/3 border-4 rounded-md" 
+                        className="w-1/2 border-4 rounded-md" 
                         name="quantity" min="1" 
                         value={product.quantity}
                         onChange={(event) => handleInputChange(event, product)} 
@@ -99,48 +103,21 @@ export function CartTable() {
                     {formatCurrency((cartTotal + 1000)/ 100)}
                 </TableHead>
             </TableRow>
+            <TableRow>
+                <TableHead></TableHead>
+                <TableHead></TableHead>
+                <TableHead></TableHead>
+                <TableHead>
+                    <div className="my-4">
+                    <Button>
+                        <Link href="/checkout">
+                            Checkout
+                        </Link>
+                    </Button>
+                    </div>
+                </TableHead>
+            </TableRow>
         </TableBody>
         </Table>
     )
 }
-
-/*<TableBody>
-            {cart.map(product => (
-                <TableRow key={product.id}>
-                    <TableCell>
-                        {product.isAvailableForPurchase ? 
-                            <> 
-                                <CheckCircle2 />
-                                <span className="sr-only">Available</span>
-                            </> 
-                            : 
-                            <> 
-                                <XCircle className="stroke-destructive"/> 
-                                <span className="sr-only">Unvailable</span>
-                            </>
-                        }
-                    </TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{formatCurrency(product.priceInCents / 100)}</TableCell>
-                    <TableCell>{formatNumber(product._count.orders)}</TableCell>
-                    <TableCell>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <MoreVertical />
-                                <span className="sr-only">Actions</span>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem>
-                                    <Link href={`/admin/products/${product.id}/edit`}>
-                                        Edit
-                                    </Link>
-                                </DropdownMenuItem>
-                                <ActiveToggleDropdownItem id={product.id} isAvailableForPurchase={product.isAvailableForPurchase}/>
-                                <DropdownMenuSeparator />
-                                <DeleteDropdownItem id={product.id} disabled={product._count.orders > 0}/>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </TableCell>
-                </TableRow>
-            ))}
-        </TableBody>*/

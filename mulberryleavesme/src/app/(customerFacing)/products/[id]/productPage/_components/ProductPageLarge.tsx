@@ -7,6 +7,7 @@ import { Product } from "@prisma/client";
 import { useShoppingCart } from "@/app/(customerFacing)/context/ShoppingCartContext";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import ProductRecommendation from "@/app/(customerFacing)/components/ProductRecommendation";
 
 type productProps = {
     product: Product
@@ -27,6 +28,7 @@ type itemToAddProps = {
 export function ProductPageLarge({ product } : productProps) {
 
     return(
+        <>
             <div className="w-full mx-auto space-y-8">
                 <div className="flex gap-6 items-center">
                     <div className="aspect-video flex-shrink-0 w-2/3 relative">
@@ -48,6 +50,10 @@ export function ProductPageLarge({ product } : productProps) {
                     </div>
                 </div>
             </div>
+            <div>
+                <ProductRecommendation />
+            </div>
+        </>
     )
 }
 
