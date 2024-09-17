@@ -10,15 +10,6 @@ import Image from "next/image";
 
 export function DropdownShoppingCart() {
 
-    /*const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-        clearCart()
-        <DropdownMenuItem>
-        <Button onClick={handleClick}>
-            Clear Cart
-        </Button>
-    </DropdownMenuItem>
-    }*/
-
     return (
         <div className="my-2 mx-1">
         <DropdownMenu>
@@ -46,7 +37,7 @@ export function DropdownShoppingCart() {
 
     const { cart } = useShoppingCart();
   
-    if(cart.length == 0){return <DropdownMenuItem> Cart is empty</DropdownMenuItem>}
+    if(cart.length == 0){return <DropdownMenuItem>Your Cart is empty</DropdownMenuItem>}
   
     return (
         <>

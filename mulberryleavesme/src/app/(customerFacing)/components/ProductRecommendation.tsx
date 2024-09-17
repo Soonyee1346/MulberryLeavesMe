@@ -51,7 +51,7 @@ export default function ProductRecommendation() {
 
     return (
         <>
-            <h1 className="mx-5 my-5">Recommended Products</h1>
+            <h1 className="mx-5 my-5 font-bold text-2xl">Recommended Products</h1>
             <ScrollArea>
                 <div className="flex w-max">
                     {

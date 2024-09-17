@@ -16,10 +16,12 @@ import { Product } from "../../Types/ShoppingCart.interface";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export function CartTable() {
 
-    const { cart, updateCartItemQuantity } = useShoppingCart()
+    const { cart, updateCartItemQuantity, removeItemFromCart} = useShoppingCart()
     const [cartTotal, setCartTotal] = useState(0)
 
     useEffect(() => {
@@ -30,6 +32,15 @@ export function CartTable() {
     const handleInputChange = (event : React.ChangeEvent<HTMLInputElement>, product : Product ) => {
         updateCartItemQuantity(product.id, (Number(event.target.value)))
     }
+
+    const deleteItem = (productId : string) => (event : React.MouseEvent<HTMLButtonElement>) => {
+        removeItemFromCart(productId)
+    }
+
+    if(cart.length < 1){
+        return "Your cart is empty"
+    }
+
 
     return (
         <Table>
@@ -42,12 +53,14 @@ export function CartTable() {
                     <TableHead className="w-0">
                         <span className="sr-only">Actions</span>
                     </TableHead>
+                    <TableHead></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
             {cart.map(product => (
                 <TableRow key={product.id}>
                     <TableCell>
+                        <Link href={`/products/${product.id}/productPage`}>
                         <Image src={`/${product.imagePath}`}
                             width={0} 
                             height={0} 
@@ -58,6 +71,7 @@ export function CartTable() {
                             }}
                             alt={product.name}
                         />
+                        </Link>
                     </TableCell>
                     <TableCell>
                         {product.name}
@@ -66,7 +80,7 @@ export function CartTable() {
                     <Input 
                         type="number" 
                         id="quantity" 
-                        className="w-1/2 border-4 rounded-md" 
+                        className="w-2/3 border-4 rounded-md" 
                         name="quantity" min="1" 
                         value={product.quantity}
                         onChange={(event) => handleInputChange(event, product)} 
@@ -74,7 +88,12 @@ export function CartTable() {
                     </TableCell>
                     <TableCell>
                         {formatCurrency(product.priceInCents * product.quantity / 100)}
-                    </TableCell>                    
+                    </TableCell>        
+                    <TableCell>
+                        <Button variant="ghost" onClick={deleteItem(product.id)}>
+                            <FontAwesomeIcon icon={faTrashCan} style={{color: "#ff0000",}} />
+                        </Button>
+                    </TableCell>            
                 </TableRow>
             ))}
             <TableRow>
