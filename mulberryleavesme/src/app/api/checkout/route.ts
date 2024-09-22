@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const totalAmount = cart.reduce(
         (total: number, product: Product) => 
             total + product.priceInCents * product.quantity, 
-        0
+        1000
     )
 
     try {
