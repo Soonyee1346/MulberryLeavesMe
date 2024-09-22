@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { loadStripe, Stripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 interface PaymentIntentResponse {
     clientSecret: string;
@@ -21,16 +21,18 @@ export default function Checkout() {
     useEffect(() => {
         async function createPaymentIntent() {
             try {
+                console.log("hi")
                 const response = await fetch("/api/checkout", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ cart }),
+                    body: JSON.stringify({ cart })
                 });
 
                 if (!response.ok) {
-                    throw new Error("Failed to fetch total");
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to fetch total");
                 }
 
                 const data : PaymentIntentResponse = await response.json();
@@ -57,27 +59,3 @@ export default function Checkout() {
         </div>
     )
 }
-
-/*import db from "@/db/db"
-import { notFound } from "next/navigation"
-import Stripe from "stripe"
-import { CheckoutForm } from "./_components/CheckoutForm"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
-
-export default function PurchasePage() {
-
-    const paymentIntent = await stripe.paymentIntents.create({
-        amount: product.priceInCents,
-        currency: "AUD", 
-        metadata: { productId: product.id}
-    })
-
-    if (paymentIntent.client_secret == null) {
-        throw Error ("Stripe failed to create payment intent")
-    }
-
-    return <CheckoutForm product={product} clientSecret={paymentIntent.client_secret}/>
-
-
-}*/

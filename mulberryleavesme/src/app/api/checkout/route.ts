@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import db from "@/db/db";
-import { Product } from "../(customerFacing)/Types/ShoppingCart.interface";
-import { notFound } from "next/navigation"
+import db from "@/db/db"
+import { Product } from "../../(customerFacing)/Types/ShoppingCart.interface"
 import Stripe from "stripe"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
@@ -10,22 +9,18 @@ interface CheckoutRequestBody {
     cart: Product[]
 }
 
-interface CheckoutResponse {
-    clientSecret: string;
-    total: number
-}
-
-export default async function POST(request: Request) {
+export async function POST(request: Request) {
 
     console.log("Checkout API reached");
 
-    const { cart } : CheckoutRequestBody = await request.json();
+    const { cart } = await request.json() as CheckoutRequestBody
 
     const validationPromises = cart.map(product => isValidProduct(product.id));
     const validationResults = await Promise.all(validationPromises);
 
     const allValid = validationResults.every(valid => valid);
     if (!allValid) {
+        
         return NextResponse.json({ error: 'One or more products are invalid' }, { status: 404 });
     }
 
@@ -47,11 +42,22 @@ export default async function POST(request: Request) {
             total: totalAmount
         })
     } catch (err) {
-        return NextResponse.json({ error: "Stripe payment intent failed"})
+        console.error(err)
+        return NextResponse.json(
+          { error: 'Stripe payment intent failed' },
+          { status: 500 }
+        )
     }
+
 }
 
 async function isValidProduct(productId : string){
     const product = await db.product.findUnique( { where : {id: productId}})
     return product !== null;
+}
+
+export async function GET() {
+
+    return NextResponse.json({ message: "GET request successful!" });
+
 }
