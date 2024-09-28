@@ -4,12 +4,17 @@ import { FormEvent, useEffect, useState } from "react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { loadStripe } from "@stripe/stripe-js";
 import { Product } from "../Types/ShoppingCart.interface";
-import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { AddressElement, Elements, LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
 import Link from "next/link";
+import { Appearance } from "@stripe/stripe-js";
+
+const appearance : Appearance = {
+    theme: 'flat'
+}
 
 interface PaymentIntentResponse {
     clientSecret: string;
@@ -79,18 +84,26 @@ export default function Checkout() {
 
 function CheckoutForm({clientSecret, total, cart} : PaymentIntentResponse & Cart){
     return (
-        <div>
-            <Elements options={ {clientSecret}} stripe={stripePromise}>
-                <Form priceInCents={total} cart={cart}/>
-            </Elements>
-        </div>
+        <>
+            <span className="inline-flex w-full justify-between">
+                <div className="w-2/3 mx-10">
+                    <Elements options={ {clientSecret, appearance}} stripe={stripePromise}>
+                        <Form priceInCents={total}/>
+                    </Elements>
+                </div>
+                <div className="w-1/3 mt-6">
+                    <CheckoutDetails priceInCents={total} cart={cart} />
+                </div>
+            </span>
+        </>
     )
 }
 
-function Form({priceInCents, cart} : {priceInCents: number} & Cart) {
+function Form({priceInCents} : {priceInCents: number}) {
     const stripe = useStripe()
     const elements = useElements()
     const [isLoading, setIsLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<string>()
 
     function handleSubmit(e: FormEvent){
         e.preventDefault()
@@ -100,69 +113,111 @@ function Form({priceInCents, cart} : {priceInCents: number} & Cart) {
         setIsLoading(true)
 
         // Check for existing order
-
+        
+        stripe.confirmPayment({ elements, confirmParams: {
+            return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/stripe/purchase-success`
+        }}).then(({ error }) => {
+            if (error.type === "card_error" || error.type === "validation_error") {
+                setErrorMessage(error.message)
+            }
+            else {
+                setErrorMessage("An unknown error occured")
+            }
+        }).finally(() => setIsLoading(false))
         
     }
     
     return (
         <form onSubmit={handleSubmit}>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Checkout</CardTitle>
-                    <CardDescription>
-                        {cart.map((product) => (
-                            <div className="my-8 flex">
-                                    <div className="w-1/3 flex justify-left mx-2">
-                                        <Link href={`/products/${product.id}/productPage`}>
-                                            <Image src={`/${product.imagePath}`} 
-                                                width={0} 
-                                                height={0} 
-                                                sizes="100vw" 
-                                                style={{ 
-                                                    width: '95%', 
-                                                    height: 'auto' 
-                                                }} 
-                                                alt={product.name}
-                                            />
-                                        </Link>
-                                    </div>
-                                    <div>
-                                        <b>{product.name}</b><br />
-                                        {formatCurrency(product.priceInCents / 100)}<br/>
-                                        <b>Quantity:</b> {product.quantity}
-                                    </div>
-                            </div>
-                        ))}
-                        <div className="flex">
-                            <div className="w-1/3 mx-2 flex justify-end"><b>Subtotal:</b></div>
-                            <div>
-                                <u>{formatCurrency(cart.reduce((total, product) => total + (product.priceInCents * product.quantity), 0)/100)}</u>
-                            </div>
-                        </div>
-                        <div className="flex">
-                            <div className="w-1/3 mx-2 flex justify-end"><b>Shipping:</b></div>
-                            <div>
-                                <u>{formatCurrency(10)}</u>
-                            </div>
-                        </div>
-                        <br></br>
-                        <div className="flex">
-                            <div className="w-1/3 mx-2 flex justify-end"><b>Total:</b></div>
-                            <div>
-                                <b></b> <u>{formatCurrency(priceInCents / 100)}</u>
-                            </div>
-                        </div>
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <PaymentElement />
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full" size="lg" disabled={stripe == null || elements == null || isLoading}>
-                        {isLoading ? "Purchasing...": `Purchase - ${formatCurrency(priceInCents / 100)}`}
-                    </Button>
-                </CardFooter>
-            </Card>
+            <div className="my-8">
+                <h2 className="font-bold text-xl mb-4">Contact Information</h2>
+                <Card>
+                    <div className="my-4 mx-4">
+                        <LinkAuthenticationElement />
+                    </div>
+                </Card>
+            </div>
+            <div className="my-8">
+                <h2 className="font-bold text-xl mb-4">Shipping Address</h2>
+                <Card className="space-y-8">
+                    <div className="my-4 mx-4">
+                        <AddressElement options={{ mode: 'shipping' }} />
+                    </div>
+                </Card>
+            </div>
+            <div className="my-8">
+                <h2 className="font-bold text-xl mb-4">Payment</h2>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Checkout</CardTitle>
+                        {errorMessage &&
+                            <CardDescription className="text-destructive">
+                                {errorMessage}
+                            </CardDescription>
+                        }
+                    </CardHeader>
+                    <CardContent>
+                        <PaymentElement />
+                    </CardContent>
+                    <CardFooter>
+                        <Button className="w-full" size="lg" disabled={stripe == null || elements == null || isLoading}>
+                            {isLoading ? "Purchasing..." : `Purchase - ${formatCurrency(priceInCents / 100)}`}
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </div>
         </form>
+    )
+}
+
+function CheckoutDetails ( { priceInCents, cart } : { priceInCents : number } & Cart ) {
+    return (
+        <div className="border-2 rounded-md my-4">
+            <div className="my-8">
+            <h1 className="text-2xl font-bold mx-4">Cart</h1>
+            {cart.map((product) => (
+                <div className="my-8 flex">
+                        <div className="w-1/3 flex justify-left mx-2">
+                            <Link href={`/products/${product.id}/productPage`}>
+                                <Image src={`/${product.imagePath}`} 
+                                    width={0} 
+                                    height={0} 
+                                    sizes="100vw" 
+                                    style={{ 
+                                        width: '95%', 
+                                        height: 'auto' 
+                                    }} 
+                                    alt={product.name}
+                                />
+                            </Link>
+                        </div>
+                        <div>
+                            <b>{product.name}</b><br />
+                            {formatCurrency(product.priceInCents / 100)}<br/>
+                            <b>Quantity:</b> {product.quantity}
+                        </div>
+                </div>
+            ))}
+            <div className="flex">
+                <div className="w-2/3 mx-2 flex justify-end"><b>Subtotal:</b></div>
+                <div>
+                    <u>{formatCurrency(cart.reduce((total, product) => total + (product.priceInCents * product.quantity), 0)/100)}</u>
+                </div>
+            </div>
+            <div className="flex">
+                <div className="w-2/3 mx-2 flex justify-end"><b>Shipping:</b></div>
+                <div>
+                    <u>{formatCurrency(10)}</u>
+                </div>
+            </div>
+            <br></br>
+            <div className="flex">
+                <div className="w-2/3 mx-2 flex justify-end"><b>Total:</b></div>
+                <div>
+                    <b></b> <u>{formatCurrency(priceInCents / 100)}</u>
+                </div>
+            </div>
+            </div>
+        </div>
     )
 }
