@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, StripeAddressElement, StripeAddressElementChangeEvent } from "@stripe/stripe-js";
 import { Product } from "../Types/ShoppingCart.interface";
 import { AddressElement, Elements, LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -104,15 +104,14 @@ function Form({priceInCents} : {priceInCents: number}) {
     const elements = useElements()
     const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState<string>()
+    const [email, setEmail] = useState<string>()
 
     function handleSubmit(e: FormEvent){
         e.preventDefault()
     
-        if(stripe == null || elements == null) return
+        if(stripe == null || elements == null || email == null) return
     
         setIsLoading(true)
-
-        // Check for existing order
         
         stripe.confirmPayment({ elements, confirmParams: {
             return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/stripe/purchase-success`
@@ -121,11 +120,15 @@ function Form({priceInCents} : {priceInCents: number}) {
                 setErrorMessage(error.message)
             }
             else {
-                setErrorMessage("An unknown error occured")
+                setErrorMessage(`An unknown error occured: ${error.message}`)
             }
         }).finally(() => setIsLoading(false))
         
     }
+
+    /*function handleAddress(e : ){
+
+    }*/
     
     return (
         <form onSubmit={handleSubmit}>
@@ -133,7 +136,7 @@ function Form({priceInCents} : {priceInCents: number}) {
                 <h2 className="font-bold text-xl mb-4">Contact Information</h2>
                 <Card>
                     <div className="my-4 mx-4">
-                        <LinkAuthenticationElement />
+                        <LinkAuthenticationElement onChange={e => setEmail(e.value.email)}/>
                     </div>
                 </Card>
             </div>
@@ -141,7 +144,10 @@ function Form({priceInCents} : {priceInCents: number}) {
                 <h2 className="font-bold text-xl mb-4">Shipping Address</h2>
                 <Card className="space-y-8">
                     <div className="my-4 mx-4">
-                        <AddressElement options={{ mode: 'shipping' }} />
+                        <AddressElement 
+                            options={{ mode: 'shipping' }} 
+                            /*onChange={e => handleAddress(e.value)}*/
+                        />
                     </div>
                 </Card>
             </div>
