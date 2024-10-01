@@ -30,10 +30,14 @@ export async function POST(request: Request) {
         1000
     )
 
+    const products = cart.map(product => product.id);
+    const productIDs = JSON.stringify(products);
+
     try {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: totalAmount,
             currency: "AUD",
+            metadata: { productIDs },
             automatic_payment_methods: { enabled: true }
         })
 
