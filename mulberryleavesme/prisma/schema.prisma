@@ -11,36 +11,44 @@ datasource db {
 }
 
 model Product {
-  id                      String          @id @default(uuid())
-  name                    String
-  priceInCents            Int
-  imagePath               String
-  description             String
-  isAvailableForPurchase  Boolean         @default(true)
-  createdAt               DateTime        @default(now())
-  updatedAt               DateTime        @updatedAt
-  orders Order[]
+  id                     String                 @id @default(uuid())
+  name                   String
+  priceInCents           Int
+  filePath               String
+  imagePath              String
+  description            String
+  isAvailableForPurchase Boolean                @default(true)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  orderProducts          OrderProduct[]
 }
 
 model User {
-  id                      String          @id @default(uuid())
-  email                   String          @unique
-  address                 String
-  createdAt               DateTime        @default(now())
-  updatedAt               DateTime        @updatedAt
-  orders Order[]
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
 }
 
 model Order {
-  id                      String          @id @default(uuid())
-  priceInCents            Int
-  sent                    Boolean         @default(false)
+  id               Int          @id @default(autoincrement())
+  pricePaidInCents Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
-  createdAt               DateTime        @default(now())
-  updatedAt               DateTime        @updatedAt
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderProducts OrderProduct[]
+}
 
-  userId                  String
-  productId               String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+model OrderProduct {
+  orderId   Int
+  productId String
+  quantity  Int
+
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([orderId, productId]) // Composite primary key
 }

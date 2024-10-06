@@ -1,3 +1,4 @@
+import db from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -29,5 +30,17 @@ export async function POST(req: NextRequest) {
             
             return new NextResponse("Bad Request", { status: 400 })
         }
+
+        const userFields = {
+            email,
+            orders: { create: { productIds, pricePaidInCents, customerDetails}}
+        }
+
+        /*const { orders: [order] } = await db.user.upsert({
+            where: { email },
+            create: userFields,
+            update: userFields,
+            select: {orders: { orderBy: { createdAt: "desc"}, take: 1}}
+        })*/
     }
 }
