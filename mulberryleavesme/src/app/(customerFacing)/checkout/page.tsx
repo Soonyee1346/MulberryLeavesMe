@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { Address, loadStripe, StripeAddressElement, StripeAddressElementChangeEvent } from "@stripe/stripe-js";
+import { loadStripe, StripeAddressElement, StripeAddressElementChangeEvent } from "@stripe/stripe-js";
 import { Product } from "../Types/ShoppingCart.interface";
 import { AddressElement, Elements, LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -105,7 +105,6 @@ function Form({priceInCents} : {priceInCents: number}) {
     const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState<string>()
     const [email, setEmail] = useState<string>()
-    const [address, setAddress] = useState<Address>()
 
     function handleSubmit(e: FormEvent){
         e.preventDefault()
@@ -126,6 +125,10 @@ function Form({priceInCents} : {priceInCents: number}) {
         }).finally(() => setIsLoading(false))
         
     }
+
+    /*function handleAddress(e : ){
+
+    }*/
     
     return (
         <form onSubmit={handleSubmit}>
@@ -143,7 +146,7 @@ function Form({priceInCents} : {priceInCents: number}) {
                     <div className="my-4 mx-4">
                         <AddressElement 
                             options={{ mode: 'shipping' }} 
-                            onChange={e => setAddress(e.value.address)}
+                            /*onChange={e => handleAddress(e.value)}*/
                         />
                     </div>
                 </Card>
