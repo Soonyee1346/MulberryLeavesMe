@@ -56,8 +56,8 @@ export default function ProductRecommendation() {
                 <div className="flex w-max">
                     {
                         popularProducts.map((product) => (
-                            <div key={product.id} className="mx-3">
-                                {ScrollCard(product)}
+                            <div className="mx-3">
+                                {scrollCard(product)}
                             </div>
                         ))
                     }
@@ -68,7 +68,7 @@ export default function ProductRecommendation() {
     )
 }
 
-function ScrollCard(product : Product){
+function scrollCard(product : Product){
     const { addItemToCart } = useShoppingCart();
 
     const item: CartProduct = {

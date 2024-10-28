@@ -40,17 +40,17 @@ export function ProductForm({
                 <div className="text-muted-foreground">
                     {formatCurrency((priceInCents || 0)/100)}
                 </div>
-                {typeof error !== "function" && error.priceInCents && <div className="text-destructive">{error.priceInCents}</div>}
+                {error.priceInCents && <div className="text-destructive">{error.priceInCents}</div>}
                 <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
                     <Textarea id="description" name="description" required defaultValue={product?.description}/>
-                    {typeof error !== "function" && error.description && <div className="text-destructive">{error.description}</div>}
+                    {error.description && <div className="text-destructive">{error.description}</div>}
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="image">Image</Label>
                     <Input type="file" id="image" name="image" required={product == null}/>
                     {product != null && <Image src={`/${product.imagePath}`} height="400" width="400" alt="product-image" />}
-                    {typeof error !== "function" && error.image && <div className="text-destructive">{error.image}</div>}
+                    {error.image && <div className="text-destructive">{error.image}</div>}
                 </div>
                 <SubmitButton />
             </form>
