@@ -36,7 +36,6 @@ mulberryleavesme/.vercel
 # typescript
 mulberryleavesme/*.tsbuildinfo
 mulberryleavesme/next-env.d.
-mulberryleavesme/products
 mulberryleavesme/.env
 mulberryleavesme/.env
 mulberryleavesme/.env
