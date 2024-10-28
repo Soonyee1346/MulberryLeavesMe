@@ -13,7 +13,7 @@ const getMostPopularProducts = cache(() => {
             isAvailableForPurchase: true
         }, 
         orderBy: { 
-            orderProducts: { 
+            orders: { 
                 _count: "desc"
             }
         },
