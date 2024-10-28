@@ -42,7 +42,7 @@ export function DropdownShoppingCart() {
     return (
         <>
             {cart.map((product) => (
-                <DropdownMenuItem className="my-8">
+                <DropdownMenuItem key={product.id} className="my-8">
                     <div className="flex">
                         <div className="w-2/3 flex justify-center mx-2">
                             <Link href={`/products/${product.id}/productPage`}>

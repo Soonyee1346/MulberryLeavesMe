@@ -1,4 +1,4 @@
-//Testing ?
+/*Testing ?
 
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
@@ -39,4 +39,4 @@ export function ProductPageSmall({ product} : product) {
             </div>
         </>
     )
-}
+}*/
