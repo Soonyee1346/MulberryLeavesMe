@@ -21,15 +21,13 @@ export async function getPopularProducts() {
         take: 4,
     });
     
-    
+    // Fetch product details for the top popular products
     const productIds = popularProducts.map((item) => item.productId);
     const products = await db.product.findMany({
         where: {
             id: { in: productIds },
         },
     });
-
-    return products
 
     /*const products = await db.product.findMany({ 
         where: { 
