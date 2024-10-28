@@ -179,7 +179,7 @@ function CheckoutDetails ( { priceInCents, cart } : { priceInCents : number } & 
             <div className="my-8">
             <h1 className="text-2xl font-bold mx-4">Cart</h1>
             {cart.map((product) => (
-                <div className="my-8 flex">
+                <div key={product.id} className="my-8 flex">
                         <div className="w-1/3 flex justify-left mx-2">
                             <Link href={`/products/${product.id}/productPage`}>
                                 <Image src={`/${product.imagePath}`} 
