@@ -10,6 +10,7 @@ Made using:
 
   Prisma
   PostGreSQL
+  Supabase
   Vercel
   
   Stripe
