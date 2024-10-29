@@ -1,6 +1,6 @@
 An in-progress E-Commerce website that advertises and sells Mulberry Leaves.
 
-https://mulberry-leaves-pgu6rfbaf-soonyee1346s-projects.vercel.app
+https://mulberry-leaves-me.vercel.app/
 
 Made using:
   TypeScript
